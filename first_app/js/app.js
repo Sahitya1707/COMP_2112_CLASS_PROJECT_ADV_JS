@@ -11,7 +11,9 @@
       // create a list items for each contact
       data.forEach((contact) => {
         let listItem = document.createElement("li");
-        listItem.innerText = contact.Name;
+        listItem.innerHTML = `
+        <a href="mailto:${contact.Email}">${contact.Name}</a>
+        `;
         listItem.className = "list-group-item";
         list.appendChild(listItem);
       });

@@ -1,5 +1,38 @@
 // create an Immediately Invoked Function Expression (IIFE) to run at startup
 (function () {
+  let LoadHeader = () => {
+    /* use jquery to read the HTML from the shared header file
+  then render this HTML content to the <header> element */
+    $.get("./views/shared/header.html", (htmlData) => {
+      $("header").html(htmlData);
+
+      // after navbar loads, add JS event handlers to each link to load the correct page
+      $(".navbar-brand, .nav-link").each(() => {
+        $(".navbar-brand, .nav-link").on("click", (event) => {
+          // cancel any default behaviour
+          event.preventDefault();
+
+          // change page title based on the id of the current link clicked
+          document.title = $(event.currentTarget).prop("id");
+          // get the content from selected page
+          LoadContent();
+          // use browser's history api to track the sequenc
+          history.pushState({}, "", `/${document.title}`);
+        });
+      });
+    });
+  };
+  let LoadContent = () => {
+    let currentPage = document.title;
+    $.get(`./views/${currentPage}.html`, (htmlData) => {
+      $("main").html(htmlData);
+    });
+  };
+  let LoadFooter = () => {
+    $.get("./views/shared/footer.html", (htmlData) => {
+      $("footer").html(htmlData);
+    });
+  };
   // old js function syntax
   // function Start() {
 
@@ -50,30 +83,5 @@ let getContacts = (callback) => {
   $.getJSON("./data/contacts.json", (data) => {
     console.log(data);
     callback(data);
-  });
-};
-
-let LoadHeader = () => {
-  /* use jquery to read the HTML from the shared header file
-  then render this HTML content to the <header> element */
-  $.get("./views/shared/header.html", (htmlData) => {
-    $("header").html(htmlData);
-
-    // after navbar loads, add JS event handlers to each link to load the correct page
-    $(".navbar-brand, .nav-link").each(() => {
-      $(".navbar-brand, .nav-link").on("click", (event) => {
-        // cancel any default behaviour
-        event.preventDefault();
-
-        // change page title based on the id of the current link clicked
-        document.title = $(event.currentTarget).prop("id");
-      });
-    });
-  });
-};
-
-let LoadFooter = () => {
-  $.get("./views/shared/footer.html", (htmlData) => {
-    $("footer").html(htmlData);
   });
 };
